@@ -7,7 +7,7 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="bg-gradient-to-r from-purple-50 to-yellow-50">
+<body class="pt-20 bg-gradient-to-r from-purple-50 to-yellow-50">
 
     <x-navbar />
 
@@ -17,6 +17,15 @@
 
     <x-career-section />
 
+    <x-course-card />
+
+    <x-mentor-section />
+
+    <x-platform-section />
+
+    <x-testimonial-section />
+
+    <x-footer-section />
 </body>
 
 </html>
