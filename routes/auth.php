@@ -12,6 +12,12 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
+    Route::get('/auth-google-redirect', [AuthenticatedSessionController::class, 'googleRedirect'])
+        ->name('auth.google.redirect');
+
+    Route::get('/auth-google-callback', [AuthenticatedSessionController::class, 'googleCallback'])
+        ->name('auth.google.callback');
+
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 

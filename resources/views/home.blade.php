@@ -5,6 +5,7 @@
     <title>EduLearn</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="pt-20 bg-gradient-to-r from-purple-50 to-yellow-50">

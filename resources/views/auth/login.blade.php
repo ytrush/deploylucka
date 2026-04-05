@@ -2,6 +2,19 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <div class="mb-6">
+        <a href="{{ route('auth.google.redirect') }}"
+            class="inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <span>{{ __('Continue with Google') }}</span>
+        </a>
+    </div>
+
+    <div class="mb-6 flex items-center gap-3">
+        <span class="h-px flex-1 bg-gray-200"></span>
+        <span class="text-xs uppercase tracking-wide text-gray-500">{{ __('or') }}</span>
+        <span class="h-px flex-1 bg-gray-200"></span>
+    </div>
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
 

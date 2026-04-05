@@ -3,14 +3,27 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Course;
+use App\Models\Enrollment;
+use App\Models\Progress;
+use App\Models\UserAnswer;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    public const ROLE_USER = 'user';
+
+    public const ROLE_ADMIN = 'admin';
+
+    public const ROLE_SUPER_ADMIN = 'super_admin';
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +34,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -44,5 +58,60 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function courses(): HasMany
+    {
+        return $this->hasMany(Course::class, 'instructor_id');
+    }
+
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    public function progresses(): HasMany
+    {
+        return $this->hasMany(Progress::class);
+    }
+
+    public function userAnswers(): HasMany
+    {
+        return $this->hasMany(UserAnswer::class);
+    }
+
+    /**
+     * @param  string|array<int, string>  $roles
+     */
+    public function hasRole(string|array $roles): bool
+    {
+        $allowedRoles = is_array($roles) ? $roles : [$roles];
+        $normalizedAllowed = array_map([$this, 'normalizeRole'], $allowedRoles);
+
+        return in_array($this->normalizeRole((string) $this->role), $normalizedAllowed, true);
+    }
+
+    /**
+     * @param  array<int, string>  $roles
+     */
+    public function hasAnyRole(array $roles): bool
+    {
+        return $this->hasRole($roles);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->hasAnyRole([self::ROLE_ADMIN, self::ROLE_SUPER_ADMIN, '2', '3']);
+    }
+
+    private function normalizeRole(string $role): string
+    {
+        return match ($role) {
+            '1' => self::ROLE_USER,
+            '2' => self::ROLE_ADMIN,
+            '3' => self::ROLE_SUPER_ADMIN,
+            'student' => self::ROLE_USER,
+            default => strtolower($role),
+        };
     }
 }
