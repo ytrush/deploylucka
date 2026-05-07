@@ -3,11 +3,9 @@
 namespace App\Models;
 
 use App\Models\Question;
-use App\Models\UserAnswer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class QuestionOption extends Model
 {
@@ -28,10 +26,5 @@ class QuestionOption extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
-    }
-
-    public function userAnswers(): HasMany
-    {
-        return $this->hasMany(UserAnswer::class, 'option_id');
     }
 }

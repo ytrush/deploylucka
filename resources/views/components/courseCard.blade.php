@@ -10,20 +10,20 @@
 </div>
 
 <div class="mt-6">
-<p class="text-sm text-gray-500">Progress</p>
+<p class="text-sm text-gray-500">Status Belajar</p>
 
 <div class="w-full bg-gray-200 h-2 rounded-full mt-2">
 <div class="bg-indigo-500 h-2 rounded-full w-[68%]"></div>
 </div>
 
-<p class="text-right text-sm mt-1">68%</p>
+<p class="text-right text-sm mt-1">Sedang Berjalan</p>
 </div>
 
 <div class="grid grid-cols-3 gap-4 mt-6">
 
 <div class="bg-gray-100 p-4 rounded-xl text-center">
 <h3 class="font-bold">12</h3>
-<p class="text-sm text-gray-500">Lessons</p>
+<p class="text-sm text-gray-500">Materi</p>
 </div>
 
 <div class="bg-pink-100 p-4 rounded-xl text-center">

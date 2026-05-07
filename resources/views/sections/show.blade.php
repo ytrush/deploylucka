@@ -18,17 +18,8 @@
                 <p class="mt-1 text-sm text-gray-500">Order: {{ $section->order }}</p>
             </div>
 
-            <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                <h4 class="font-semibold">Lessons</h4>
-                <ul class="mt-3 space-y-2">
-                    @forelse ($section->lessons->sortBy('order') as $lesson)
-                        <li class="rounded border p-3">
-                            {{ $lesson->order }}. {{ $lesson->title }} ({{ $lesson->duration }} menit)
-                        </li>
-                    @empty
-                        <li class="text-sm text-gray-500">Belum ada lesson.</li>
-                    @endforelse
-                </ul>
+            <div class="rounded border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
+                Materi sekarang dikelola langsung dari Course, bukan dari Section.
             </div>
         </div>
     </div>

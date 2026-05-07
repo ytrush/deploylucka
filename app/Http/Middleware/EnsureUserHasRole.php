@@ -32,7 +32,7 @@ class EnsureUserHasRole
         }
 
         if (! $user->hasAnyRole($parsedRoles)) {
-            abort(403, 'You do not have permission to access this resource.');
+            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         return $next($request);

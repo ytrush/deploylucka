@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Lesson;
+use App\Models\Course;
+use App\Models\Materi;
 use App\Models\QuestionOption;
-use App\Models\UserAnswer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,23 +17,29 @@ class Question extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'lesson_id',
+        'course_id',
+        'materi_id',
         'question',
         'type',
+        'points',
     ];
 
-    public function lesson(): BelongsTo
+    protected $casts = [
+        'points' => 'integer',
+    ];
+
+    public function course(): BelongsTo
     {
-        return $this->belongsTo(Lesson::class);
+        return $this->belongsTo(Course::class);
+    }
+
+    public function materi(): BelongsTo
+    {
+        return $this->belongsTo(Materi::class);
     }
 
     public function options(): HasMany
     {
         return $this->hasMany(QuestionOption::class);
-    }
-
-    public function userAnswers(): HasMany
-    {
-        return $this->hasMany(UserAnswer::class);
     }
 }

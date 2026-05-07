@@ -27,7 +27,6 @@ class SectionController extends Controller
     {
         $section->load([
             'course:id,title,instructor_id',
-            'lessons',
         ]);
 
         return view('sections.show', compact('section'));

@@ -18,6 +18,7 @@ class StoreCourseRequest extends FormRequest
     {
         return [
             'instructor_id' => ['required', 'integer', 'exists:users,id'],
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'level' => ['required', 'string', 'max:100'],

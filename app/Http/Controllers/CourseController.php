@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
+use App\Models\Category;
 use App\Models\Course;
-use App\Models\User;
+use App\Models\Instructor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,19 +15,31 @@ class CourseController extends Controller
 {
     public function index(Request $request): View
     {
+        $selectedCategoryId = $request->integer('category_id');
+
         $courses = Course::query()
-            ->with('instructor:id,name,email,role')
+            ->with(['instructor:id,name,photo_path', 'category:id,name'])
+            ->when($selectedCategoryId > 0, function ($query) use ($selectedCategoryId) {
+                $query->where('category_id', $selectedCategoryId);
+            })
             ->orderByDesc('id')
             ->paginate((int) $request->integer('per_page', 15));
 
-        return view('courses.index', compact('courses'));
+        $courses->appends($request->query());
+
+        $categories = Category::query()
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        return view('courses.index', compact('courses', 'categories', 'selectedCategoryId'));
     }
 
     public function show(Course $course): View
     {
         $course->load([
-            'instructor:id,name,email,role',
-            'sections.lessons',
+            'instructor:id,name,photo_path',
+            'category:id,name',
+            'materis',
         ]);
 
         return view('courses.show', compact('course'));
@@ -34,12 +47,13 @@ class CourseController extends Controller
 
     public function create(): View
     {
-        $instructors = User::query()
-            ->whereIn('role', ['admin', 'super_admin', '2', '3'])
+        $instructors = Instructor::query()
             ->orderBy('name')
-            ->get(['id', 'name', 'email', 'role']);
+            ->get(['id', 'name', 'photo_path']);
 
-        return view('courses.create', compact('instructors'));
+        $categories = Category::query()->orderBy('name')->get(['id', 'name']);
+
+        return view('courses.create', compact('instructors', 'categories'));
     }
 
     public function store(StoreCourseRequest $request): RedirectResponse
@@ -51,12 +65,13 @@ class CourseController extends Controller
 
     public function edit(Course $course): View
     {
-        $instructors = User::query()
-            ->whereIn('role', ['admin', 'super_admin', '2', '3'])
+        $instructors = Instructor::query()
             ->orderBy('name')
-            ->get(['id', 'name', 'email', 'role']);
+            ->get(['id', 'name', 'photo_path']);
 
-        return view('courses.edit', compact('course', 'instructors'));
+        $categories = Category::query()->orderBy('name')->get(['id', 'name']);
+
+        return view('courses.edit', compact('course', 'instructors', 'categories'));
     }
 
     public function update(UpdateCourseRequest $request, Course $course): RedirectResponse

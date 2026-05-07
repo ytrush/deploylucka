@@ -31,9 +31,9 @@
                 <div
                     class="w-14 h-14 rounded-xl bg-pink-100 inline-flex items-center justify-center text-pink-600 text-xl mb-5">
                     📈</div>
-                <h3 class="text-2xl font-bold">Progress Tracking</h3>
-                <p class="mt-3 text-slate-500">Advanced analytics dashboard to monitor your learning journey and
-                    achievements</p>
+                <h3 class="text-2xl font-bold">Learning Insights</h3>
+                <p class="mt-3 text-slate-500">Ringkasan performa course untuk membantu evaluasi materi dan hasil
+                    belajar</p>
             </div>
 
             <div class="bg-white rounded-3xl p-8 border border-emerald-100 shadow-sm hover:shadow-md transition">
@@ -67,9 +67,9 @@
                 <div
                     class="w-14 h-14 rounded-xl bg-pink-100 inline-flex items-center justify-center text-pink-600 text-xl mb-5">
                     📈</div>
-                <h3 class="text-2xl font-bold">Progress Tracking</h3>
-                <p class="mt-3 text-slate-500">Advanced analytics dashboard to monitor your learning journey and
-                    achievements</p>
+                <h3 class="text-2xl font-bold">Learning Insights</h3>
+                <p class="mt-3 text-slate-500">Ringkasan performa course untuk membantu evaluasi materi dan hasil
+                    belajar</p>
             </div>
 
             <div class="bg-white rounded-3xl p-8 border border-emerald-100 shadow-sm hover:shadow-md transition">

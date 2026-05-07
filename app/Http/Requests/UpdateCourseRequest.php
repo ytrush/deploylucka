@@ -18,6 +18,7 @@ class UpdateCourseRequest extends FormRequest
     {
         return [
             'instructor_id' => ['sometimes', 'integer', 'exists:users,id'],
+            'category_id' => ['sometimes', 'integer', 'exists:categories,id'],
             'title' => ['sometimes', 'string', 'max:255'],
             'description' => ['sometimes', 'string'],
             'level' => ['sometimes', 'string', 'max:100'],

@@ -10,7 +10,12 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <h3 class="text-lg font-semibold text-gray-900">Menu Belajar</h3>
 
-                <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+                <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-4">
+                    <a href="{{ route('categories.index') }}" class="rounded border bg-white p-4 hover:bg-gray-50">
+                        <div class="font-medium">Categories</div>
+                        <div class="text-sm text-gray-500">Lihat daftar kategori</div>
+                    </a>
+
                     <a href="{{ route('courses.index') }}" class="rounded border bg-white p-4 hover:bg-gray-50">
                         <div class="font-medium">Courses</div>
                         <div class="text-sm text-gray-500">Lihat daftar course</div>
@@ -21,9 +26,9 @@
                         <div class="text-sm text-gray-500">Lihat section per course</div>
                     </a>
 
-                    <a href="{{ route('lessons.index') }}" class="rounded border bg-white p-4 hover:bg-gray-50">
-                        <div class="font-medium">Lessons</div>
-                        <div class="text-sm text-gray-500">Lihat materi lesson</div>
+                    <a href="{{ route('materis.index') }}" class="rounded border bg-white p-4 hover:bg-gray-50">
+                        <div class="font-medium">Materi</div>
+                        <div class="text-sm text-gray-500">Lihat materi per course</div>
                     </a>
                 </div>
 

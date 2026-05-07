@@ -9,11 +9,24 @@
             <option value="">Pilih Instructor</option>
             @foreach ($instructors as $instructor)
                 <option value="{{ $instructor->id }}" @selected(old('instructor_id', $course?->instructor_id) == $instructor->id)>
-                    {{ $instructor->name }} ({{ $instructor->role }})
+                    {{ $instructor->name }}
                 </option>
             @endforeach
         </select>
         @error('instructor_id')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+    </div>
+
+    <div>
+        <label for="category_id" class="block text-sm font-medium text-gray-700">Kategori</label>
+        <select id="category_id" name="category_id" class="mt-1 w-full rounded-md border-gray-300" required>
+            <option value="">Pilih Kategori</option>
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}" @selected(old('category_id', $course?->category_id) == $category->id)>
+                    {{ $category->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('category_id')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
 
     <div>

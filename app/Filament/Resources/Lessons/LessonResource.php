@@ -7,16 +7,25 @@ use App\Filament\Resources\Lessons\Pages\EditLesson;
 use App\Filament\Resources\Lessons\Pages\ListLessons;
 use App\Filament\Resources\Lessons\Schemas\LessonForm;
 use App\Filament\Resources\Lessons\Tables\LessonsTable;
-use App\Models\Lesson;
+use App\Models\Materi;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class LessonResource extends Resource
 {
-    protected static ?string $model = Lesson::class;
+    protected static ?string $model = Materi::class;
+
+    protected static ?string $navigationLabel = 'Materi';
+
+    protected static ?string $pluralModelLabel = 'Materi';
+
+    protected static ?string $modelLabel = 'Materi';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Manajemen Eduweb';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
@@ -28,6 +37,13 @@ class LessonResource extends Resource
     public static function table(Table $table): Table
     {
         return LessonsTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with([
+            'course:id,title',
+        ]);
     }
 
     public static function getRelations(): array

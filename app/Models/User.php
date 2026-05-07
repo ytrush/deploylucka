@@ -4,9 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Course;
-use App\Models\Enrollment;
-use App\Models\Progress;
-use App\Models\UserAnswer;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -63,21 +60,6 @@ class User extends Authenticatable implements FilamentUser
     public function courses(): HasMany
     {
         return $this->hasMany(Course::class, 'instructor_id');
-    }
-
-    public function enrollments(): HasMany
-    {
-        return $this->hasMany(Enrollment::class);
-    }
-
-    public function progresses(): HasMany
-    {
-        return $this->hasMany(Progress::class);
-    }
-
-    public function userAnswers(): HasMany
-    {
-        return $this->hasMany(UserAnswer::class);
     }
 
     /**

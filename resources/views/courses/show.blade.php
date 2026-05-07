@@ -14,21 +14,22 @@
 
             <div class="bg-white p-6 shadow-sm sm:rounded-lg">
                 <h3 class="text-lg font-semibold">{{ $course->title }}</h3>
+                <p class="mt-1 text-sm text-gray-500">Kategori: {{ $course->category?->name ?? '-' }}</p>
                 <p class="mt-1 text-sm text-gray-500">Level: {{ $course->level }}</p>
                 <p class="mt-1 text-sm text-gray-500">Instructor: {{ $course->instructor?->name }}</p>
                 <p class="mt-4 text-gray-700">{{ $course->description }}</p>
             </div>
 
             <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                <h4 class="font-semibold">Sections</h4>
+                <h4 class="font-semibold">Materi</h4>
                 <ul class="mt-3 space-y-2">
-                    @forelse ($course->sections->sortBy('order') as $section)
+                    @forelse ($course->materis->sortBy('order') as $materi)
                         <li class="rounded border p-3">
-                            <div class="font-medium">{{ $section->order }}. {{ $section->title }}</div>
-                            <div class="mt-1 text-sm text-gray-500">{{ $section->lessons->count() }} lesson(s)</div>
+                            <div class="font-medium">{{ $materi->order }}. {{ $materi->title }}</div>
+                            <div class="mt-1 text-sm text-gray-500">Durasi: {{ $materi->duration }} menit</div>
                         </li>
                     @empty
-                        <li class="text-sm text-gray-500">Belum ada section.</li>
+                        <li class="text-sm text-gray-500">Belum ada materi.</li>
                     @endforelse
                 </ul>
             </div>

@@ -13,10 +13,19 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class SectionResource extends Resource
 {
     protected static ?string $model = Section::class;
+
+    protected static ?string $navigationLabel = 'Bagian';
+
+    protected static ?string $pluralModelLabel = 'Bagian';
+
+    protected static ?string $modelLabel = 'Bagian';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Manajemen Eduweb';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
@@ -28,6 +37,13 @@ class SectionResource extends Resource
     public static function table(Table $table): Table
     {
         return SectionsTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with([
+            'course:id,title',
+        ]);
     }
 
     public static function getRelations(): array

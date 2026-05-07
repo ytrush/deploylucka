@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\Enrollment;
+use App\Models\Category;
+use App\Models\Materi;
+use App\Models\Question;
 use App\Models\Section;
-use App\Models\User;
+use App\Models\Instructor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,14 +20,19 @@ class Course extends Model
 
     protected $fillable = [
         'instructor_id',
+        'category_id',
         'title',
         'description',
-        'level',
     ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 
     public function instructor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'instructor_id');
+        return $this->belongsTo(Instructor::class, 'instructor_id');
     }
 
     public function sections(): HasMany
@@ -33,8 +40,13 @@ class Course extends Model
         return $this->hasMany(Section::class);
     }
 
-    public function enrollments(): HasMany
+    public function materis(): HasMany
     {
-        return $this->hasMany(Enrollment::class);
+        return $this->hasMany(Materi::class);
+    }
+
+    public function questions(): HasMany
+    {
+        return $this->hasMany(Question::class);
     }
 }
