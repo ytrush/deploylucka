@@ -22,6 +22,7 @@ class StoreCourseRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'level' => ['required', 'string', 'max:100'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'],
         ];
     }
 }

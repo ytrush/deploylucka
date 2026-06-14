@@ -4,10 +4,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Course;
+use App\Models\Enrollment;
+use App\Models\MateriCompletion;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -60,6 +63,28 @@ class User extends Authenticatable implements FilamentUser
     public function courses(): HasMany
     {
         return $this->hasMany(Course::class, 'instructor_id');
+    }
+
+    public function quizAttempts(): HasMany
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
+
+    public function materiCompletions(): HasMany
+    {
+        return $this->hasMany(MateriCompletion::class);
+    }
+
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    public function enrolledCourses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'enrollments', 'user_id', 'course_id')
+            ->withTimestamps()
+            ->withPivot('enrolled_at');
     }
 
     /**

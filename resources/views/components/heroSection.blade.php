@@ -1,4 +1,4 @@
-<section id="hero" class="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-purple-50 to-white py-24">
+<section id="hero" class="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-purple-50 to-white py-4">
     <div class="max-w-7xl mx-auto px-6 xl:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
         <div class="space-y-8">

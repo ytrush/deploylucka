@@ -6,6 +6,7 @@ use App\Filament\Resources\Questions\QuestionResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 class EditQuestion extends EditRecord
 {
@@ -13,7 +14,15 @@ class EditQuestion extends EditRecord
 
     protected function beforeSave(): void
     {
-        $this->validateOptions();
+        try {
+            $this->validateOptions();
+        } catch (ValidationException $e) {
+            Log::warning('Question edit validation failed', ['state' => $this->form->getState(), 'error' => $e->getMessage()]);
+            if (method_exists($this, 'notify')) {
+                $this->notify('danger', $e->getMessage());
+            }
+            throw $e;
+        }
     }
 
     protected function getHeaderActions(): array

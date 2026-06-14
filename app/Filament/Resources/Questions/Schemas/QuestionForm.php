@@ -59,13 +59,13 @@ class QuestionForm
                     ->default('multiple_choice')
                     ->dehydrated(true),
                 Repeater::make('options')
-                    ->relationship()
+                    ->relationship('options')
                     ->label('Pilihan Jawaban')
-                    ->defaultItems(4)
+                    ->defaultItems(2)
                     ->minItems(2)
                     ->maxItems(6)
                     ->addActionLabel('Tambah Opsi')
-                    ->collapsible()
+                    
                     ->schema([
                         TextInput::make('option_text')
                             ->label('Opsi')

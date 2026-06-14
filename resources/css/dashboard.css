@@ -1,0 +1,66 @@
+/* Dashboard-specific styles (moved out of dashboard.blade.php) */
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+
+/* Fallbacks in case CSS variables are not defined */
+:root{--color-background-primary:#fff;--color-background-secondary:#f6f7fb;--color-border-tertiary:#e6e8f0;--color-text-primary:#111827;--color-text-secondary:#6b7280;--color-text-tertiary:#9ca3af;--border-radius-lg:16px;--border-radius-md:12px}
+
+.dash{padding:1.5rem 1rem}
+.greeting{margin-bottom:1.5rem}
+.greeting h1{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.greeting p{font-size:14px;color:var(--color-text-secondary);margin-top:2px}
+.section-label{font-size:12px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.25rem}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:1.25rem}
+
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem}
+.stat-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem 1.1rem}
+
+.stat-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:15px}
+.icon-purple{background:#EEEDFE;color:#534AB7}
+.icon-teal{background:#E1F5EE;color:#0F6E56}
+.icon-amber{background:#FAEEDA;color:#854F0B}
+.icon-blue{background:#E6F1FB;color:#185FA5}
+
+.stat-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.stat-val{font-size:22px;font-weight:500;color:var(--color-text-primary);line-height:1.2}
+.stat-sub{font-size:12px;color:var(--color-text-tertiary);margin-top:3px}
+
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.badge-teal{background:#E1F5EE;color:#0F6E56}
+.badge-amber{background:#FAEEDA;color:#854F0B}
+.badge-purple{background:#EEEDFE;color:#534AB7}
+
+.progress-bar{height:5px;border-radius:99px;background:var(--color-border-tertiary);margin-top:10px;overflow:hidden}
+.progress-fill{height:100%;border-radius:99px}
+.fill-purple{background:#7F77DD}
+.fill-teal{background:#1D9E75}
+.fill-amber{background:#EF9F27}
+
+.wide-card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.wide-inner{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+.flex-between{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.see-all{font-size:12px;color:#534AB7;cursor:pointer}
+
+.act-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid var(--color-border-tertiary)}
+.act-row:last-child{border-bottom:none}
+.act-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.act-name{font-size:13px;color:var(--color-text-primary)}
+.act-date{font-size:12px;color:var(--color-text-tertiary)}
+.act-pct{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-left:auto}
+
+.recs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+
+.rec-card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;display:flex;flex-direction:column;gap:6px}
+.rec-tag{font-size:11px;font-weight:500;color:#185FA5;letter-spacing:.04em}
+.rec-title{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.rec-meta{font-size:12px;color:var(--color-text-secondary);display:flex;align-items:center;gap:6px}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
+
+@media (max-width:1024px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}.wide-inner{grid-template-columns:1fr}.recs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.grid4{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.recs{grid-template-columns:1fr}}
+
