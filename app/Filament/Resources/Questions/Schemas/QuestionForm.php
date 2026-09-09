@@ -23,17 +23,17 @@ class QuestionForm
                     ->searchable()
                     ->preload()
                     ->live()
-                    ->afterStateUpdated(fn ($set) => $set('materi_id', null))
+                    ->afterStateUpdated(fn($set) => $set('materi_id', null))
                     ->placeholder('Pilih course')
                     ->rules(['exists:courses,id']),
                 Select::make('materi_id')
                     ->relationship(
                         name: 'materi',
                         titleAttribute: 'title',
-                        modifyQueryUsing: fn ($query, $get) => $query
+                        modifyQueryUsing: fn($query, $get) => $query
                             ->when(
                                 filled($get('course_id')),
-                                fn ($q) => $q->where('course_id', $get('course_id')),
+                                fn($q) => $q->where('course_id', $get('course_id')),
                             )
                     )
                     ->label('Materi (Opsional)')
@@ -55,6 +55,18 @@ class QuestionForm
                     ->minValue(1)
                     ->suffix('poin')
                     ->default(10),
+
+                Select::make('test_type')
+                    ->label('Tipe Tes')
+                    ->required()
+                    ->options([
+                        'regular' => 'Regular',
+                        'pre_test' => 'Pre Test',
+                        'post_test' => 'Post Test',
+                    ])
+                    ->default('regular')
+                    ->searchable(),
+
                 Hidden::make('type')
                     ->default('multiple_choice')
                     ->dehydrated(true),
@@ -65,7 +77,7 @@ class QuestionForm
                     ->minItems(2)
                     ->maxItems(6)
                     ->addActionLabel('Tambah Opsi')
-                    
+
                     ->schema([
                         TextInput::make('option_text')
                             ->label('Opsi')

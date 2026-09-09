@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Courses\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -15,6 +16,17 @@ class CoursesTable
     {
         return $table
             ->columns([
+                ImageColumn::make('image')
+                    ->label('Thumbnail')
+                    ->disk('public')
+                    ->height(56)
+                    ->width(96)
+                    ->defaultImageUrl(asset('images/course-placeholder.svg')),
+                TextColumn::make('section.title')
+                    ->label('Section')
+                    ->searchable()
+                    ->sortable()
+                    ->placeholder('-'),
                 TextColumn::make('instructor.name')
                     ->searchable()
                     ->sortable(),
@@ -36,6 +48,11 @@ class CoursesTable
                     ->sortable(),
             ])
             ->filters([
+                SelectFilter::make('section_id')
+                    ->label('Section')
+                    ->relationship('section', 'title')
+                    ->searchable()
+                    ->preload(),
                 SelectFilter::make('category_id')
                     ->label('Kategori')
                     ->relationship('category', 'name')

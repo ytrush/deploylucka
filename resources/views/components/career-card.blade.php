@@ -38,9 +38,9 @@ Avg. Starting Salary
 
 </div> --}}
 
-<button class="w-full mt-6 bg-black text-white py-3 rounded-xl">
+{{-- <button class="w-full mt-6 bg-black text-white py-3 rounded-xl">
 View Path
-</button>
+</button> --}}
 
 </div>
 

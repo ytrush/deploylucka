@@ -2,9 +2,6 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Daftar Materi</h2>
-            @if (auth()->user()?->hasAnyRole(['admin', 'super_admin', '2', '3']))
-                <a href="{{ route('materis.create') }}" class="rounded-md bg-indigo-600 px-4 py-2 text-sm text-white">Tambah Materi</a>
-            @endif
         </div>
     </x-slot>
 
@@ -34,14 +31,6 @@
                                 <td class="px-4 py-3">{{ $materi->duration }} menit</td>
                                 <td class="px-4 py-3 text-right space-x-2">
                                     <a href="{{ route('materis.show', $materi) }}" class="text-indigo-600">Detail</a>
-                                    @if (auth()->user()?->hasAnyRole(['admin', 'super_admin', '2', '3']))
-                                        <a href="{{ route('materis.edit', $materi) }}" class="text-amber-600">Edit</a>
-                                        <form action="{{ route('materis.destroy', $materi) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600" onclick="return confirm('Hapus materi ini?')">Hapus</button>
-                                        </form>
-                                    @endif
                                 </td>
                             </tr>
                         @empty

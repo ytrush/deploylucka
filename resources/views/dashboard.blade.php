@@ -1,251 +1,258 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
-        </div>
-    </x-slot>
-
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-8">
-        <div class="space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-                <div>
-                    <h1 class="text-[20px] font-medium text-gray-900">Selamat datang kembali 👋</h1>
-                    <p class="text-sm text-gray-600 mt-1">Pantau progres belajar Anda hari ini.</p>
-                </div>
-            </div>
-
-            @php
-                $completion = (int) ($completionRate ?? 0);
-                $completionClamped = min($completion, 100);
-                $completedMateris = (int) ($completedMateris ?? 0);
-                $totalMateris = (int) ($totalMateris ?? 0);
-                $completedCourses = (int) ($completedCourses ?? 0);
-                $inProgressCourses = (int) ($inProgressCourses ?? 0);
-                $totalCourses = (int) ($totalCourses ?? 0);
-                $avgQuiz = (int) ($avgQuizScore ?? 0);
-
-                $courseDonePct = $totalCourses > 0 ? (int) round(($completedCourses / $totalCourses) * 100) : 0;
-                $courseProgPct = $totalCourses > 0 ? (int) round(($inProgressCourses / $totalCourses) * 100) : 0;
-            @endphp
-
-            <div>
-                <p class="text-xs font-medium text-gray-500 tracking-widest uppercase">Ringkasan</p>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
-                    <div class="bg-white border border-slate-200 rounded-xl p-5">
-                        <div
-                            class="w-9 h-9 rounded-lg flex items-center justify-center mb-3 bg-[#EEEDFE] text-[#534AB7]">
-                            <i class="ti ti-progress" aria-hidden="true"></i>
-                        </div>
-                        <div class="text-xs text-gray-500 mb-1">Completion rate</div>
-                        <div class="text-2xl font-medium text-gray-900">{{ $completion }}%</div>
-                        <div class="h-1.5 bg-slate-200 rounded-full overflow-hidden mt-3">
-                            <div class="h-full bg-[#7F77DD]" style="width:{{ $completionClamped }}%"></div>
-                        </div>
-                        <div class="text-xs text-gray-400 mt-2">{{ $completedMateris }} dari {{ $totalMateris }} materi
-                        </div>
-                    </div>
-
-                    <div class="bg-white border border-slate-200 rounded-xl p-5">
-                        <div
-                            class="w-9 h-9 rounded-lg flex items-center justify-center mb-3 bg-[#E1F5EE] text-[#0F6E56]">
-                            <i class="ti ti-award" aria-hidden="true"></i>
-                        </div>
-                        <div class="text-xs text-gray-500 mb-1">Nilai rata-rata quiz</div>
-                        <div class="text-2xl font-medium text-gray-900">{{ $avgQuiz }}%</div>
-                        <div class="h-1.5 bg-slate-200 rounded-full overflow-hidden mt-3">
-                            <div class="h-full bg-[#1D9E75]" style="width:100%"></div>
-                        </div>
-                        <div class="text-xs text-gray-400 mt-2">Sempurna!</div>
-                    </div>
-
-                    <div class="bg-white border border-slate-200 rounded-xl p-5">
-                        <div
-                            class="w-9 h-9 rounded-lg flex items-center justify-center mb-3 bg-[#E6F1FB] text-[#185FA5]">
-                            <i class="ti ti-book" aria-hidden="true"></i>
-                        </div>
-                        <div class="text-xs text-gray-500 mb-1">Course selesai</div>
-                        <div class="text-2xl font-medium text-gray-900">
-                            {{ $completedCourses }} <span class="text-sm font-normal text-gray-400">/
-                                {{ $totalCourses }}</span>
-                        </div>
-                        <div class="h-1.5 bg-slate-200 rounded-full overflow-hidden mt-3">
-                            <div class="h-full bg-[#1D9E75]" style="width:{{ $courseDonePct }}%"></div>
-                        </div>
-                        <div class="text-xs text-gray-400 mt-2">{{ max($totalCourses - $completedCourses, 0) }} course
-                            tersisa</div>
-                    </div>
-
-                    <div class="bg-white border border-slate-200 rounded-xl p-5">
-                        <div
-                            class="w-9 h-9 rounded-lg flex items-center justify-center mb-3 bg-[#FAEEDA] text-[#854F0B]">
-                            <i class="ti ti-loader" aria-hidden="true"></i>
-                        </div>
-                        <div class="text-xs text-gray-500 mb-1">Sedang berjalan</div>
-                        <div class="text-2xl font-medium text-gray-900">
-                            {{ $inProgressCourses }} <span class="text-sm font-normal text-gray-400">/
-                                {{ $totalCourses }}</span>
-                        </div>
-                        <div class="h-1.5 bg-slate-200 rounded-full overflow-hidden mt-3">
-                            <div class="h-full bg-[#EF9F27]" style="width:{{ $courseProgPct }}%"></div>
-                        </div>
-                        <div class="text-xs text-gray-400 mt-2">Lanjutkan belajar</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white border border-slate-200 rounded-xl p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="text-xs font-medium text-gray-500">Course terdaftar</div>
-                        <i class="ti ti-books text-gray-400" style="font-size:16px" aria-hidden="true"></i>
-                    </div>
-                    <div class="text-2xl font-medium text-gray-900">{{ (int) ($enrolledCoursesCount ?? 0) }}</div>
-                    <div class="text-xs text-gray-400 mt-1">Course yang Anda daftarkan</div>
-                </div>
-
-                <div class="bg-white border border-slate-200 rounded-xl p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="text-xs font-medium text-gray-500">Total percobaan quiz</div>
-                        <i class="ti ti-pencil text-gray-400" style="font-size:16px" aria-hidden="true"></i>
-                    </div>
-                    <div class="text-2xl font-medium text-gray-900">{{ (int) ($totalQuizAttempts ?? 0) }}</div>
-                    <div class="text-xs text-gray-400 mt-1">Percobaan yang dilakukan</div>
-                </div>
-
-                <div class="bg-white border border-slate-200 rounded-xl p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="text-xs font-medium text-gray-500">Sertifikat siap</div>
-                        <i class="ti ti-certificate text-gray-400" style="font-size:16px" aria-hidden="true"></i>
-                    </div>
-                    <div class="text-2xl font-medium text-gray-900">{{ (int) ($certificateReadyCount ?? 0) }}</div>
-                    <div class="text-xs text-gray-400 mt-1">Siap untuk diunduh</div>
-                </div>
-            </div>
-
-            <div class="bg-white border border-slate-200 rounded-xl p-5">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+    <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
+            
+            <!-- Welcome Header -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <p class="text-xs font-medium text-gray-500 tracking-widest uppercase">Aktivitas course</p>
-                            <span class="text-xs text-indigo-700 cursor-pointer">Lihat semua</span>
+                        <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Selamat datang kembali 👋</h1>
+                        <p class="text-gray-600 mt-1">{{ Auth::user()->name }}, pantau progres belajar Anda hari ini</p>
+                    </div>
+                    <a href="/courses" class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">
+                        <i class="ti ti-book"></i>
+                        <span>Explore Courses</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Key Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <!-- Overall Progress -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-5 border border-purple-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-xs text-purple-600 font-semibold uppercase">Overall Completion</p>
+                        <i class="ti ti-chart-pie text-purple-400 text-xl"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-purple-900">{{ $completionRate }}%</p>
+                    <div class="mt-2 w-full bg-purple-200 rounded-full h-1.5">
+                        <div class="bg-gradient-to-r from-purple-400 to-purple-600 h-1.5 rounded-full" style="width: {{ $completionRate }}%"></div>
+                    </div>
+                </div>
+
+                <!-- Average Quiz Score -->
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-5 border border-blue-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-xs text-blue-600 font-semibold uppercase">Avg Quiz Score</p>
+                        <i class="ti ti-target text-blue-400 text-xl"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-blue-900">{{ $avgQuizScore }}%</p>
+                    <p class="text-xs text-blue-600 mt-2">{{ $totalQuizAttempts }} attempts</p>
+                </div>
+
+                <!-- Enrolled vs Completed -->
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-5 border border-green-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-xs text-green-600 font-semibold uppercase">Courses Progress</p>
+                        <i class="ti ti-book text-green-400 text-xl"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-green-900">{{ $completedCourses }}/{{ $enrolledCoursesCount }}</p>
+                    <p class="text-xs text-green-600 mt-2">{{ $inProgressCourses }} in progress</p>
+                </div>
+
+                <!-- Total Certificates -->
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-5 border border-orange-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-xs text-orange-600 font-semibold uppercase">Certificates Ready</p>
+                        <i class="ti ti-certificate text-orange-400 text-xl"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-orange-900">{{ $certificateReadyCount }}</p>
+                    <p class="text-xs text-orange-600 mt-2">Completed courses</p>
+                </div>
+            </div>
+
+            <!-- Two Column Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column - Main Content -->
+                <div class="lg:col-span-2 space-y-8">
+                    
+                    <!-- All Courses Progress -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h2 class="text-lg font-bold text-gray-900">All Your Courses</h2>
+                                <p class="text-xs text-gray-500 mt-1">{{ $coursesProgress->count() }} courses enrolled</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <a href="/roadmap" class="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+                                    <i class="ti ti-route"></i> Roadmap
+                                </a>
+                                <a href="/analytics" class="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium">
+                                    <i class="ti ti-chart-bar"></i> Analytics
+                                </a>
+                            </div>
                         </div>
 
-                        <div class="divide-y divide-slate-200">
-                            @forelse ($coursesProgress as $item)
-                                @php
-                                    $progress = (int) ($item->progress ?? 0);
-                                    $completed = (int) ($item->completed ?? 0);
-                                    $total = (int) ($item->total ?? 0);
-
-                                    $iconBg = '#EEEDFE';
-                                    $iconFg = '#534AB7';
-                                    if ($progress >= 100) {
-                                        $iconBg = '#E1F5EE';
-                                        $iconFg = '#0F6E56';
-                                    } elseif ($progress < 40) {
-                                        $iconBg = '#FAEEDA';
-                                        $iconFg = '#854F0B';
-                                    } else {
-                                        $iconBg = '#E6F1FB';
-                                        $iconFg = '#185FA5';
-                                    }
-                                @endphp
-
-                                <div class="py-3 flex items-center gap-3">
-                                    <div class="w-7 h-7 rounded-md flex items-center justify-center"
-                                        style="background:{{ $iconBg }}; color:{{ $iconFg }}">
-                                        <i class="ti ti-code" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="text-sm text-gray-900 truncate">{{ $item->course->title }}</div>
-                                        <div class="text-xs text-gray-400">{{ $completed }} / {{ $total }}
-                                            completed</div>
-                                    </div>
-                                    <div class="text-right">
-                                        <div class="text-sm font-medium text-gray-900">{{ $progress }}%</div>
-                                        <div class="text-xs text-gray-400">
-                                            {{ $progress >= 100 ? 'Selesai' : 'In progress' }}</div>
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="py-3 text-sm text-gray-500">No course progress available yet.</div>
-                            @endforelse
-                        </div>
+                        @if($coursesProgress->isNotEmpty())
+                            <div class="space-y-2.5">
+                                @foreach($coursesProgress as $item)
+                                    @php
+                                        $progress = (int) ($item->progress ?? 0);
+                                        $statusColor = match(true) {
+                                            $progress >= 100 => ['bg-green-50', 'border-green-200', 'text-green-700'],
+                                            $progress >= 50 => ['bg-orange-50', 'border-orange-200', 'text-orange-700'],
+                                            $progress > 0 => ['bg-blue-50', 'border-blue-200', 'text-blue-700'],
+                                            default => ['bg-gray-50', 'border-gray-200', 'text-gray-700']
+                                        };
+                                        $progressBarColor = match(true) {
+                                            $progress >= 100 => 'bg-gradient-to-r from-green-400 to-green-500',
+                                            $progress >= 50 => 'bg-gradient-to-r from-orange-400 to-orange-500',
+                                            $progress > 0 => 'bg-gradient-to-r from-blue-400 to-blue-500',
+                                            default => 'bg-gray-300'
+                                        };
+                                    @endphp
+                                    <a href="{{ route('courses.show', $item->course) }}" class="block border {{ $statusColor[1] }} rounded-lg p-3 hover:shadow-md transition-all duration-300 group" style="background-color: var(--bg-color);" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='var(--bg-color)'">
+                                        <div class="flex items-start justify-between mb-2">
+                                            <div class="flex-1 min-w-0">
+                                                <h4 class="font-semibold text-gray-900 line-clamp-1 group-hover:text-orange-600">{{ $item->course->title }}</h4>
+                                                <p class="text-xs text-gray-600 mt-0.5">{{ $item->completed }}/{{ $item->total }} lessons</p>
+                                            </div>
+                                            <div class="flex items-center gap-2 flex-shrink-0">
+                                                @if($item->course->instructor)
+                                                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold" title="{{ $item->course->instructor->name }}">
+                                                        {{ substr($item->course->instructor->name, 0, 1) }}
+                                                    </div>
+                                                @endif
+                                                <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold border {{ $statusColor[1] }}" style="background-color: inherit; color: inherit;">
+                                                    {{ $progress }}%
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                                            <div class="{{ $progressBarColor }} h-1.5 rounded-full transition-all duration-500" style="width: {{ $progress }}%"></div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-8">
+                                <i class="ti ti-inbox text-gray-300 text-4xl block mb-2"></i>
+                                <p class="text-gray-500 text-sm">No courses enrolled yet</p>
+                                <a href="/courses" class="text-orange-500 text-sm font-medium mt-3 inline-block hover:text-orange-600 inline-flex items-center gap-1">
+                                    <i class="ti ti-arrow-right"></i> Start learning now
+                                </a>
+                            </div>
+                        @endif
                     </div>
 
-                    <div class="space-y-4">
-                        <div class="bg-[#F8FAFC] rounded-lg p-4 text-center">
-                            <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
-                                style="background:#EEEDFE;color:#534AB7">
-                                <i class="ti ti-rosette" aria-hidden="true"></i>
-                            </div>
-                            <div class="text-base font-medium text-gray-900 mb-1">
-                                {{ $achievementLabel ?? 'New Learner' }}</div>
-                            <div class="text-xs text-gray-500">Pencapaian Anda berdasarkan progres</div>
-                        </div>
-
-                        <div class="bg-[#F8FAFC] rounded-lg p-4">
-                            <div class="text-xs text-gray-500 mb-3">Recent Activity</div>
-
-                            <div class="space-y-3">
-                                @forelse ($recentCompletions as $c)
-                                    <div>
-                                        <div class="text-sm text-gray-900">Selesai: {{ $c->materi->title }}</div>
-                                        <div class="text-xs text-gray-500 mt-0.5">
-                                            {{ $c->completed_at->format('d M Y H:i') }}</div>
-                                    </div>
-                                @empty
-                                    <div class="text-sm text-gray-500">No recent completions.</div>
-                                @endforelse
-
-                                @foreach ($recentQuizzes as $q)
-                                    <div class="pt-1">
-                                        <div class="text-sm text-gray-900">Quiz: {{ $q->materi?->title ?? '—' }}</div>
-                                        <div class="flex items-center justify-between mt-0.5">
-                                            <div class="text-xs text-gray-500">
-                                                {{ $q->created_at->format('d M Y H:i') }}</div>
-                                            <div class="text-sm font-medium text-gray-900">{{ $q->percentage }}%</div>
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                        <h2 class="text-lg font-bold text-gray-900 mb-4">Recent Activity</h2>
+                        <div class="space-y-3">
+                            @if($recentCompletions->isNotEmpty())
+                                @foreach($recentCompletions->take(3) as $completion)
+                                    <div class="flex items-start gap-3 p-3 bg-green-50 border border-green-100 rounded-lg">
+                                        <div class="flex-shrink-0 mt-1">
+                                            <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                                                <i class="ti ti-check text-green-600"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-semibold text-gray-900">Lesson completed</p>
+                                            <p class="text-xs text-gray-600 truncate">{{ $completion->materi->title ?? 'Unknown' }} in {{ $completion->materi->course->title ?? 'Unknown' }}</p>
+                                            <p class="text-xs text-gray-500 mt-1">{{ $completion->completed_at->diffForHumans() }}</p>
                                         </div>
                                     </div>
                                 @endforeach
+                            @else
+                                <p class="text-center text-gray-500 text-sm py-4">No recent activity</p>
+                            @endif
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column - Sidebar -->
+                <div class="space-y-8">
+                    
+                    <!-- User Profile Card -->
+                    <div class="bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl shadow-sm p-6 text-white">
+                        <div class="flex flex-col items-center text-center mb-4">
+                            <div class="w-16 h-16 rounded-full bg-white/30 flex items-center justify-center text-2xl font-bold mb-3">
+                                {{ substr(Auth::user()->name, 0, 1) }}
+                            </div>
+                            <h3 class="text-lg font-bold">{{ Auth::user()->name }}</h3>
+                            <p class="text-orange-100 text-xs mt-1">{{ $achievementLabel ?? 'Learner' }}</p>
+                        </div>
+                        <div class="space-y-2 pt-4 border-t border-white/20">
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-orange-100">Enrollment Status</span>
+                                <span class="font-semibold">{{ $enrolledCoursesCount }}</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-orange-100">Completed</span>
+                                <span class="font-semibold">{{ $completedCourses }}</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-orange-100">In Progress</span>
+                                <span class="font-semibold">{{ $inProgressCourses }}</span>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="flex items-start justify-between gap-4">
-                <div>
-                    <p class="text-xs font-medium text-gray-500 tracking-widest uppercase">Rekomendasi course</p>
-                    <p class="text-xs text-gray-400 mt-1">Pilihan sesuai minat Anda</p>
-                </div>
-                <span class="text-xs text-indigo-700 cursor-pointer">Lihat semua</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                @forelse ($recommendedCourses ?? collect() as $recommendedCourse)
-                    <div class="bg-white border border-slate-200 rounded-xl p-5">
-                        <div class="text-xs font-medium tracking-wide" style="color:#185FA5">
-                            {{ $recommendedCourse->category?->name ?? 'COURSE' }}</div>
-                        <div class="text-sm font-medium text-gray-900 mt-1">{{ $recommendedCourse->title }}</div>
-                        <div class="flex items-center justify-between mt-3">
-                            <div class="flex items-center gap-2 text-xs text-gray-500">
-                                <i class="ti ti-clock" style="font-size:13px" aria-hidden="true"></i>
-                                <span>—</span>
+                    <!-- Quick Stats -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Learning Stats</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                                        <i class="ti ti-book text-purple-600"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-medium">Lessons Completed</p>
+                                    <p class="text-2xl font-bold text-gray-900">{{ $completedMateris }}</p>
+                                </div>
                             </div>
-                            <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium"
-                                style="background:#EEEDFE;color:#534AB7">
-                                {{ $recommendedCourse->level ?? 'Pemula' }}
-                            </span>
+                            <div class="flex items-start gap-3">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                                        <i class="ti ti-clipboard text-blue-600"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-medium">Quiz Attempts</p>
+                                    <p class="text-2xl font-bold text-gray-900">{{ $totalQuizAttempts }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                                        <i class="ti ti-certificate text-green-600"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-medium">Certificates Available</p>
+                                    <p class="text-2xl font-bold text-gray-900">{{ $certificateReadyCount }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                @empty
-                    <div class="bg-white border border-slate-200 rounded-xl p-5 md:col-span-3">
-                        <div class="text-sm text-gray-500">Belum ada rekomendasi course.</div>
-                    </div>
-                @endforelse
+
+                    <!-- Recommended Courses -->
+                    @if($recommendedCourses->isNotEmpty())
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Recommended for You</h3>
+                            <div class="space-y-2">
+                                @foreach($recommendedCourses->take(3) as $course)
+                                    <a href="{{ route('courses.show', $course) }}" class="block border border-gray-200 rounded-lg p-3 hover:border-orange-400 hover:bg-orange-50 transition-all duration-300 group">
+                                        <p class="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-orange-600">{{ $course->title }}</p>
+                                        <div class="flex items-center gap-2 mt-2">
+                                            <span class="text-xs font-medium text-gray-500">{{ $course->category->name ?? 'Course' }}</span>
+                                            @if($course->instructor)
+                                                <span class="text-xs text-gray-400">by {{ $course->instructor->name }}</span>
+                                            @endif
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                </div>
             </div>
+
         </div>
     </div>
 </x-app-layout>

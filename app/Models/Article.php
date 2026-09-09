@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Parsedown;
 
 class Article extends Model
 {
@@ -60,5 +61,21 @@ class Article extends Model
         return $query->where('is_published', true)
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now());
+    }
+
+    public function getContentHtmlAttribute(): string
+    {
+        $parsedown = new Parsedown();
+        // Parsedown needs blank lines between paragraphs
+        // Split by double newlines first to preserve existing paragraph breaks
+        $paragraphs = preg_split('/\n\n+/', $this->content);
+        
+        // Parse each paragraph and join with double newlines
+        $parsed = array_map(function($para) use ($parsedown) {
+            return trim($para);
+        }, $paragraphs);
+        
+        $content = implode("\n\n", $parsed);
+        return $parsedown->text($content);
     }
 }

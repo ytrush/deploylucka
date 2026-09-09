@@ -6,7 +6,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class SectionsTable
@@ -15,13 +14,8 @@ class SectionsTable
     {
         return $table
             ->columns([
-                TextColumn::make('course.title')
-                    ->label('Course')
-                    ->searchable()
-                    ->sortable()
-                    ->limit(35),
                 TextColumn::make('title')
-                    ->label('Bagian')
+                    ->label('Nama Section')
                     ->searchable()
                     ->sortable()
                     ->limit(40),
@@ -29,13 +23,10 @@ class SectionsTable
                     ->label('Urutan')
                     ->numeric()
                     ->sortable(),
-            ])
-            ->filters([
-                SelectFilter::make('course_id')
-                    ->label('Course')
-                    ->relationship('course', 'title')
-                    ->searchable()
-                    ->preload(),
+                TextColumn::make('courses_count')
+                    ->label('Jumlah Course')
+                    ->counts('courses')
+                    ->sortable(),
             ])
             ->recordActions([
                 EditAction::make(),
@@ -45,6 +36,6 @@ class SectionsTable
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->modifyQueryUsing(fn ($query) => $query->orderBy('course_id')->orderBy('order'));
+            ->modifyQueryUsing(fn ($query) => $query->orderBy('order'));
     }
 }

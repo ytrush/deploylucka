@@ -184,25 +184,31 @@
                             @forelse ($materi->comments()->with('user')->get() as $comment)
                                 <div class="border-b pb-4 last:border-b-0">
                                     <div class="flex items-start gap-3">
-                                        <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-semibold text-sm">
+                                        <div
+                                            class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-semibold text-sm">
                                             {{ strtoupper(substr($comment->user->name, 0, 1)) }}
                                         </div>
                                         <div class="flex-1">
                                             <div class="flex items-center gap-2">
                                                 <span class="font-semibold text-sm">{{ $comment->user->name }}</span>
-                                                <span class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+                                                <span
+                                                    class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
                                             </div>
                                             <p class="mt-1 text-gray-700 text-sm">{{ $comment->content }}</p>
 
                                             <!-- Reply Form -->
                                             <details class="mt-2">
-                                                <summary class="text-xs text-indigo-600 cursor-pointer hover:text-indigo-700">Balas</summary>
-                                                <form action="{{ route('materis.comments.store', $materi) }}" method="POST" class="mt-2">
+                                                <summary
+                                                    class="text-xs text-indigo-600 cursor-pointer hover:text-indigo-700">
+                                                    Balas</summary>
+                                                <form action="{{ route('materis.comments.store', $materi) }}"
+                                                    method="POST" class="mt-2">
                                                     @csrf
                                                     <input type="hidden" name="parent_id" value="{{ $comment->id }}">
                                                     <div class="flex gap-2">
                                                         <input type="text" name="content"
-                                                            class="flex-1 rounded-md border-gray-300 shadow-sm text-sm" placeholder="Tulis balasan..." required>
+                                                            class="flex-1 rounded-md border-gray-300 shadow-sm text-sm"
+                                                            placeholder="Tulis balasan..." required>
                                                         <button type="submit"
                                                             class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-3 rounded-lg text-sm transition">
                                                             Kirim
@@ -216,15 +222,20 @@
                                                 <div class="mt-3 ml-4 space-y-3 border-l-2 border-indigo-100 pl-4">
                                                     @foreach ($comment->replies as $reply)
                                                         <div class="flex items-start gap-2">
-                                                            <div class="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-semibold text-xs">
+                                                            <div
+                                                                class="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-semibold text-xs">
                                                                 {{ strtoupper(substr($reply->user->name, 0, 1)) }}
                                                             </div>
                                                             <div class="flex-1">
                                                                 <div class="flex items-center gap-2">
-                                                                    <span class="font-semibold text-xs">{{ $reply->user->name }}</span>
-                                                                    <span class="text-xs text-gray-500">{{ $reply->created_at->diffForHumans() }}</span>
+                                                                    <span
+                                                                        class="font-semibold text-xs">{{ $reply->user->name }}</span>
+                                                                    <span
+                                                                        class="text-xs text-gray-500">{{ $reply->created_at->diffForHumans() }}</span>
                                                                     @if ($reply->user_id === Auth::id())
-                                                                        <form action="{{ route('comments.destroy', $reply) }}" method="POST" class="inline">
+                                                                        <form
+                                                                            action="{{ route('comments.destroy', $reply) }}"
+                                                                            method="POST" class="inline">
                                                                             @csrf
                                                                             @method('DELETE')
                                                                             <button type="submit"
@@ -233,7 +244,8 @@
                                                                         </form>
                                                                     @endif
                                                                 </div>
-                                                                <p class="mt-1 text-gray-700 text-xs">{{ $reply->content }}</p>
+                                                                <p class="mt-1 text-gray-700 text-xs">
+                                                                    {{ $reply->content }}</p>
                                                             </div>
                                                         </div>
                                                     @endforeach
@@ -241,7 +253,8 @@
                                             @endif
 
                                             @if ($comment->user_id === Auth::id())
-                                                <form action="{{ route('comments.destroy', $comment) }}" method="POST" class="mt-2 inline">
+                                                <form action="{{ route('comments.destroy', $comment) }}"
+                                                    method="POST" class="mt-2 inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
@@ -270,11 +283,13 @@
                                             <tr>
                                                 <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">
                                                     Tanggal</th>
-                                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Skor
+                                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">
+                                                    Skor
                                                 </th>
                                                 <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">
                                                     Benar/Total</th>
-                                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Poin
+                                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">
+                                                    Poin
                                                 </th>
                                                 <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">
                                                     Status</th>
@@ -527,6 +542,12 @@
                             <p class="mt-2 text-sm font-medium text-gray-900">{{ $materi->course?->title }}</p>
                             @if ($materi->course?->instructor)
                                 <p class="mt-1 text-xs text-gray-500">👤 {{ $materi->course?->instructor?->name }}</p>
+                                @if ($materi->course?->instructor?->email)
+                                    <p class="mt-1 text-xs text-gray-500">📧 <a
+                                            href="mailto:{{ $materi->course->instructor->email }}"
+                                            class="text-indigo-600 hover:text-indigo-800">{{ $materi->course->instructor->email }}</a>
+                                    </p>
+                                @endif
                             @endif
                         </div>
 
@@ -582,7 +603,7 @@
 
         const materiCompletionRoute = "{{ route('materis.complete', $materi) }}";
         const csrfToken = '{{ csrf_token() }}';
-        let materiCompleted = @json($videoCompleted ? true : false);
+        let materiCompleted = @json(isset($videoCompleted) && $videoCompleted ? true : false);
 
         function updateCompletionBadge() {
             const badge = document.getElementById('completionBadge');

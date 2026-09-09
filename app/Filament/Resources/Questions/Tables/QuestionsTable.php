@@ -26,6 +26,10 @@ class QuestionsTable
                 TextColumn::make('question')
                     ->searchable()
                     ->limit(80),
+                TextColumn::make('test_type')
+                    ->label('Tipe Tes')
+                    ->sortable(),
+
                 TextColumn::make('points')
                     ->label('Nilai')
                     ->numeric()

@@ -2,9 +2,6 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Daftar Section</h2>
-            @if (auth()->user()?->hasAnyRole(['admin', 'super_admin', '2', '3']))
-                <a href="{{ route('sections.create') }}" class="rounded-md bg-indigo-600 px-4 py-2 text-sm text-white">Tambah Section</a>
-            @endif
         </div>
     </x-slot>
 
@@ -32,14 +29,6 @@
                                 <td class="px-4 py-3">{{ $section->title }}</td>
                                 <td class="px-4 py-3 text-right space-x-2">
                                     <a href="{{ route('sections.show', $section) }}" class="text-indigo-600">Detail</a>
-                                    @if (auth()->user()?->hasAnyRole(['admin', 'super_admin', '2', '3']))
-                                        <a href="{{ route('sections.edit', $section) }}" class="text-amber-600">Edit</a>
-                                        <form action="{{ route('sections.destroy', $section) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600" onclick="return confirm('Hapus section ini?')">Hapus</button>
-                                        </form>
-                                    @endif
                                 </td>
                             </tr>
                         @empty

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Courses\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -14,6 +15,13 @@ class CourseForm
     {
         return $schema
             ->components([
+                Select::make('section_id')
+                    ->relationship('section', 'title')
+                    ->label('Section / Kategori')
+                    ->searchable()
+                    ->preload()
+                    ->placeholder('Pilih section')
+                    ->rules(['exists:sections,id']),
                 Select::make('instructor_id')
                     ->label('Instruktur')
                     ->searchable()
@@ -25,7 +33,7 @@ class CourseForm
                     ->relationship(
                         name: 'instructor',
                         titleAttribute: 'name',
-                        modifyQueryUsing: fn (Builder $query): Builder => $query->orderBy('name'),
+                        modifyQueryUsing: fn(Builder $query): Builder => $query->orderBy('name'),
                     ),
                 Select::make('category_id')
                     ->relationship('category', 'name')
@@ -40,6 +48,16 @@ class CourseForm
                     ->required()
                     ->placeholder('Contoh: Laravel dari Nol')
                     ->maxLength(255),
+                FileUpload::make('image')
+                    ->label('Thumbnail Course')
+                    ->nullable()
+                    ->image()
+                    ->disk('public')
+                    ->directory('courses')
+                    ->preserveFilenames()
+                    ->imagePreviewHeight('220')
+                    ->maxSize(2048)
+                    ->helperText('Unggah gambar thumbnail untuk course ini.'),
                 Textarea::make('description')
                     ->label('Deskripsi')
                     ->required()

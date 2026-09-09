@@ -16,7 +16,11 @@ class CourseQuizController extends Controller
     {
         abort_unless(in_array($type, ['pretest', 'posttest'], true), 404);
 
-        $course->load(['questions.options']);
+        $testTypeValue = $type === 'pretest' ? 'pre_test' : 'post_test';
+
+        $course->load(['questions' => function ($q) use ($testTypeValue) {
+            $q->where('test_type', $testTypeValue)->with('options');
+        }]);
 
         $quizLabel = $type === 'pretest' ? 'Pretest' : 'Pos Test';
 
@@ -24,6 +28,9 @@ class CourseQuizController extends Controller
             ->where('user_id', Auth::id())
             ->where('course_id', $course->id)
             ->where('type', $type)
+            ->whereHas('course', function ($q) use ($course) {
+                $q->where('id', $course->id);
+            })
             ->with('answers.question', 'answers.questionOption')
             ->orderByDesc('created_at')
             ->get();
@@ -35,7 +42,13 @@ class CourseQuizController extends Controller
     {
         abort_unless(in_array($type, ['pretest', 'posttest'], true), 404);
 
-        $course->load(['questions.options']);
+        $testTypeValue = $type === 'pretest' ? 'pre_test' : 'post_test';
+
+        $course->load(['questions' => function ($q) use ($testTypeValue) {
+            $q->where('test_type', $testTypeValue)->with('options');
+        }]);
+
+
         $questions = $course->questions;
 
         $validated = $request->validate([

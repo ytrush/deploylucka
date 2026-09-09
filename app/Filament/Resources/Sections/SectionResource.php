@@ -42,7 +42,7 @@ class SectionResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->with([
-            'course:id,title',
+            'courses:id,title',
         ]);
     }
 

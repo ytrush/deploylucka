@@ -21,6 +21,7 @@ class UpdateCategoryRequest extends FormRequest
 
         return [
             'name' => ['sometimes', 'string', 'max:100', Rule::unique('categories', 'name')->ignore($categoryId)],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
             'description' => ['nullable', 'string'],
         ];
     }

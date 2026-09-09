@@ -24,6 +24,7 @@ class Course extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'section_id',
         'instructor_id',
         'category_id',
         'title',
@@ -41,9 +42,9 @@ class Course extends Model
         return $this->belongsTo(Instructor::class, 'instructor_id');
     }
 
-    public function sections(): HasMany
+    public function section(): BelongsTo
     {
-        return $this->hasMany(Section::class);
+        return $this->belongsTo(Section::class, 'section_id');
     }
 
     public function materis(): HasMany

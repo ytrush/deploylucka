@@ -43,15 +43,6 @@
     </div>
 
     <div>
-        <label for="level" class="block text-sm font-medium text-gray-700">Level</label>
-        <input id="level" name="level" type="text" value="{{ old('level', $course?->level) }}"
-            class="mt-1 w-full rounded-md border-gray-300" required>
-        @error('level')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-        @enderror
-    </div>
-
-    <div>
         <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
         <textarea id="description" name="description" rows="5" class="mt-1 w-full rounded-md border-gray-300" required>{{ old('description', $course?->description) }}</textarea>
         @error('description')

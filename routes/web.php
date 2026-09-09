@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
 
 Route::get('/', function () {
     return view('home');
-});
+})->middleware('admin.filament');
 
 Route::get('/dashboard', function () {
     $user = Auth::user();
@@ -121,9 +121,9 @@ Route::get('/dashboard', function () {
         'certificateReadyCount',
         'achievementLabel'
     ));
-})->middleware(['auth'])->name('dashboard');
+})->middleware(['auth', 'admin.filament'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'admin.filament'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -274,7 +274,7 @@ Route::middleware('auth')->group(function () {
         ));
     })->name('analytics');
 
-    // Read-only pages for all authenticated users (user/admin/super_admin).
+    // Read-only pages for regular users only (admins are redirected to Filament).
     Route::resource('articles', ArticleController::class)->only(['index', 'show']);
     Route::resource('categories', CategoryController::class)->only(['index', 'show']);
     Route::resource('courses', CourseController::class)->only(['index', 'show']);
@@ -291,21 +291,18 @@ Route::middleware('auth')->group(function () {
     // Enrollment management
     Route::post('courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->name('courses.enroll');
     Route::post('courses/{course}/disenroll', [EnrollmentController::class, 'disenroll'])->name('courses.disenroll');
+    Route::post('courses/{course}/enrollment/pause', [EnrollmentController::class, 'pause'])->name('courses.enrollment.pause');
+    Route::post('courses/{course}/enrollment/resume', [EnrollmentController::class, 'resume'])->name('courses.enrollment.resume');
+    Route::get('courses/{course}/enrollment/stats', [EnrollmentController::class, 'stats'])->name('courses.enrollment.stats');
+    Route::get('courses/{course}/enrollment/timeline', [EnrollmentController::class, 'timeline'])->name('courses.enrollment.timeline');
+    Route::get('enrollment/progress/{course}', [EnrollmentController::class, 'progress'])->name('enrollment.progress');
+    Route::get('enrollment/my-courses', [EnrollmentController::class, 'myCourses'])->name('enrollment.my-courses');
+    Route::get('courses/{course}/enrollment/users', [EnrollmentController::class, 'enrolledUsers'])->name('courses.enrollment.users');
 
     // Comments
     Route::post('courses/{course}/comments', [CommentController::class, 'storeCourse'])->name('courses.comments.store');
     Route::post('materis/{materi}/comments', [CommentController::class, 'storeMateri'])->name('materis.comments.store');
     Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-
-    // Management pages/actions restricted to admin and super_admin.
-    Route::middleware('role:admin,super_admin')->group(function () {
-        Route::resource('articles', ArticleController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
-        Route::resource('categories', CategoryController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
-        Route::resource('courses', CourseController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
-        Route::resource('sections', SectionController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
-        Route::resource('materis', MateriController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
-        Route::resource('learning-paths', LearningPathController::class)->except(['show']);
-    });
 });
 
 // Route::get('/home', function () {

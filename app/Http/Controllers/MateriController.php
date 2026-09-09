@@ -37,10 +37,6 @@ class MateriController extends Controller
             return redirect()->route('login');
         }
 
-        if ($user->hasAnyRole(['admin', 'super_admin', '2', '3'])) {
-            return null;
-        }
-
         $materi->load('course');
 
         if (! $materi->course || ! $materi->course->isEnrolledBy($user)) {
@@ -50,7 +46,7 @@ class MateriController extends Controller
         return null;
     }
 
-    public function show(Materi $materi): View
+    public function show(Materi $materi): View|\Illuminate\Http\RedirectResponse
     {
         if ($redirect = $this->ensureMateriAccess($materi)) {
             return $redirect;
@@ -104,7 +100,7 @@ class MateriController extends Controller
         ]);
     }
 
-    public function submitQuiz(Request $request, Materi $materi): View
+    public function submitQuiz(Request $request, Materi $materi): View|\Illuminate\Http\RedirectResponse
     {
         if ($redirect = $this->ensureMateriAccess($materi)) {
             return $redirect;

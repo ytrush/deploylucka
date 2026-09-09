@@ -12,6 +12,12 @@ class InstructorForm
     {
         return $schema->components([
             TextInput::make('name')->label('Nama')->required()->maxLength(255),
+            TextInput::make('email')
+                ->label('Email')
+                ->email()
+                ->required()
+                ->maxLength(255)
+                ->helperText('Email ini akan tampil untuk siswa yang ingin menghubungi instruktur.'),
             FileUpload::make('image')
                 ->label('Gambar')
                 ->image()

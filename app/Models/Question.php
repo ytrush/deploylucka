@@ -21,6 +21,7 @@ class Question extends Model
         'materi_id',
         'question',
         'type',
+        'test_type',
         'points',
     ];
 

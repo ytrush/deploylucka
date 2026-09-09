@@ -2,19 +2,20 @@
 <html lang="en">
 
 <head>
-    <title>EduLearn</title>
+    <title>Edumora</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/Primary-Edumora.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="pt-20 bg-gradient-to-r from-purple-50 to-yellow-50">
+<body class="pt-[73px] bg-gradient-to-r from-purple-50 to-yellow-50">
 
     <x-navbar />
 
     <x-heroSection />
 
-    <x-learning-path-section />
+    {{-- <x-learning-path-section /> --}}
 
     <x-career-section />
 

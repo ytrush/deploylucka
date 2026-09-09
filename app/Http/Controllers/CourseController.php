@@ -19,13 +19,19 @@ class CourseController extends Controller
     public function index(Request $request): View
     {
         $selectedCategoryId = $request->integer('category_id');
+        $selectedPathId = $request->integer('path_id');
         $search = trim((string) $request->input('search', ''));
         $user = Auth::user();
 
         $courses = Course::query()
-            ->with(['instructor:id,name,photo_path', 'category:id,name'])
+            ->with(['instructor:id,name,email,photo_path', 'category:id,name', 'materis'])
             ->when($selectedCategoryId > 0, function ($query) use ($selectedCategoryId) {
                 $query->where('category_id', $selectedCategoryId);
+            })
+            ->when($selectedPathId > 0, function ($query) use ($selectedPathId) {
+                $query->whereHas('learningPaths', function ($q) use ($selectedPathId) {
+                    $q->where('learning_paths.id', $selectedPathId);
+                });
             })
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($sub) use ($search) {
@@ -34,11 +40,29 @@ class CourseController extends Controller
                 });
             })
             ->orderByDesc('id')
-            ->paginate((int) $request->integer('per_page', 15));
+            ->paginate((int) $request->integer('per_page', 6));
 
         $courses->appends($request->query());
 
+        // Calculate progress for each course
+        $courseProgress = [];
+        if ($user) {
+            foreach ($courses as $course) {
+                $totalMateris = $course->materis->count();
+                $completedMateris = MateriCompletion::whereIn('materi_id', $course->materis->pluck('id'))
+                    ->where('user_id', $user->id)
+                    ->count();
+                $progress = $totalMateris > 0 ? (int) (($completedMateris / $totalMateris) * 100) : 0;
+                $courseProgress[$course->id] = [
+                    'total' => $totalMateris,
+                    'completed' => $completedMateris,
+                    'percentage' => $progress,
+                ];
+            }
+        }
+
         $categories = Category::query()
+            ->withCount('courses')
             ->orderBy('name')
             ->get(['id', 'name']);
 
@@ -46,7 +70,7 @@ class CourseController extends Controller
         $preferredCategoryIds = $user ? $user->enrolledCourses()->pluck('category_id')->filter()->unique()->toArray() : [];
 
         $recommendedCourses = Course::query()
-            ->with(['instructor:id,name,photo_path', 'category:id,name'])
+            ->with(['instructor:id,name,email,photo_path', 'category:id,name', 'materis'])
             ->when(! empty($preferredCategoryIds), function ($query) use ($preferredCategoryIds) {
                 $query->whereIn('category_id', $preferredCategoryIds);
             })
@@ -57,20 +81,31 @@ class CourseController extends Controller
 
         if ($recommendedCourses->isEmpty()) {
             $recommendedCourses = Course::query()
-                ->with(['instructor:id,name,photo_path', 'category:id,name'])
+                ->with(['instructor:id,name,email,photo_path', 'category:id,name', 'materis'])
                 ->whereNotIn('id', $enrolledCourseIds)
                 ->orderByDesc('id')
                 ->take(3)
                 ->get();
         }
 
+        // Get learning paths with their courses
+        $learningPaths = \App\Models\LearningPath::query()
+            ->with(['courses' => function ($query) {
+                $query->with(['instructor:id,name', 'category:id,name', 'materis']);
+            }])
+            ->take(4)
+            ->get();
+
         return view('courses.index', compact(
             'courses',
             'categories',
             'selectedCategoryId',
+            'selectedPathId',
             'enrolledCourseIds',
             'search',
-            'recommendedCourses'
+            'recommendedCourses',
+            'courseProgress',
+            'learningPaths'
         ));
     }
 
@@ -78,7 +113,7 @@ class CourseController extends Controller
     {
         $user = Auth::user();
 
-        if (! $user || $user->hasAnyRole(['admin', 'super_admin', '2', '3'])) {
+        if (! $user) {
             return null;
         }
 
@@ -91,23 +126,28 @@ class CourseController extends Controller
 
     public function show(Course $course): View|\Illuminate\Http\RedirectResponse
     {
-        if ($redirect = $this->ensureEnrolled($course)) {
-            return $redirect;
-        }
-
         $course->load([
-            'instructor:id,name,photo_path',
+            'instructor:id,name,email,photo_path',
             'category:id,name',
             'materis',
             'comments.user',
             'comments.replies.user',
         ]);
 
-        $completedMateriIds = MateriCompletion::query()
-            ->where('user_id', Auth::id())
-            ->whereIn('materi_id', $course->materis->pluck('id'))
-            ->pluck('materi_id')
-            ->all();
+        $completedMateriIds = [];
+        $user = Auth::user();
+
+        if ($user) {
+            try {
+                $completedMateriIds = MateriCompletion::query()
+                    ->where('user_id', $user->id)
+                    ->whereIn('materi_id', $course->materis->pluck('id'))
+                    ->pluck('materi_id')
+                    ->all();
+            } catch (\Throwable $e) {
+                $completedMateriIds = [];
+            }
+        }
 
         $progress = $course->getProgressPercentage();
         $hasCertificate = $course->materis->count() > 0 && count($completedMateriIds) === $course->materis->count();
@@ -126,13 +166,19 @@ class CourseController extends Controller
         }
 
         $course->load([
-            'instructor:id,name,photo_path',
+            'instructor:id,name,email,photo_path',
             'category:id,name',
             'materis',
             'sections',
         ]);
 
-        $questions = $course->questions()->with('options')->get();
+        $testTypeValue = $type === 'pretest' ? 'pre_test' : 'post_test';
+
+        $questions = $course->questions()
+            ->where('test_type', $testTypeValue)
+            ->with('options')
+            ->get();
+
         $quizLabel = $type === 'pretest' ? 'Pretest' : 'Pos Test';
         $submittedAnswers = [];
 
@@ -150,13 +196,18 @@ class CourseController extends Controller
         }
 
         $course->load([
-            'instructor:id,name,photo_path',
+            'instructor:id,name,email,photo_path',
             'category:id,name',
             'materis',
             'sections',
         ]);
 
-        $questions = $course->questions()->with('options')->get();
+        $testTypeValue = $type === 'pretest' ? 'pre_test' : 'post_test';
+
+        $questions = $course->questions()
+            ->where('test_type', $testTypeValue)
+            ->with('options')
+            ->get();
 
         $validated = $request->validate([
             'answers' => 'required|array',
