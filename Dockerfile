@@ -49,6 +49,10 @@ RUN for module in mpm_event mpm_worker mpm_prefork; do \
     && rm -f /etc/apache2/mods-enabled/mpm_*.load \
               /etc/apache2/mods-enabled/mpm_*.conf \
     && a2enmod mpm_prefork rewrite \
+    RUN echo "===== MPM CONFIGURATION SEARCH =====" \
+    && grep -RniE '^[[:space:]]*LoadModule[[:space:]]+mpm_' /etc/apache2 || true \
+    && echo "===== ENABLED MPM FILES =====" \
+    && ls -la /etc/apache2/mods-enabled/mpm_* 2>/dev/null || true
     && apache2ctl configtest
 
 # Install Composer
