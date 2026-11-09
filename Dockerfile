@@ -44,11 +44,14 @@ RUN rm -rf /var/lib/apt/lists/* \
     && rm -rf /var/lib/apt/lists/*
 
 # Fix Apache MPM configuration
-RUN rm -f /etc/apache2/mods-enabled/mpm_event.* \
-          /etc/apache2/mods-enabled/mpm_worker.* \
-    && a2enmod mpm_prefork rewrite \
-    && ls -l /etc/apache2/mods-enabled/mpm*
+# Fix Apache MPM configuration
+# Fix Apache MPM configuration
+RUN a2dismod mpm_event mpm_worker || true
 
+RUN rm -f /etc/apache2/mods-enabled/mpm_*.load \
+          /etc/apache2/mods-enabled/mpm_*.conf \
+    && a2enmod mpm_prefork rewrite \
+    && apache2ctl -M
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
