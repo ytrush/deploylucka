@@ -43,16 +43,13 @@ RUN rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-
-# Configure Apache to use only prefork MPM
-RUN a2dismod mpm_event mpm_worker mpm_prefork || true
-
-RUN rm -f /etc/apache2/mods-enabled/mpm_*.load \
-          /etc/apache2/mods-enabled/mpm_*.conf \
+RUN for module in mpm_event mpm_worker mpm_prefork; do \
+        a2dismod "$module" || true; \
+    done \
+    && rm -f /etc/apache2/mods-enabled/mpm_*.load \
+              /etc/apache2/mods-enabled/mpm_*.conf \
     && a2enmod mpm_prefork rewrite \
-    && echo "=== VERIFY APACHE MPM ===" \
-    && apache2ctl -M 2>&1 | grep mpm
-
+    && apache2ctl configtest
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
