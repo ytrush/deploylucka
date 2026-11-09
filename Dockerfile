@@ -43,16 +43,13 @@ RUN rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN for module in mpm_event mpm_worker mpm_prefork; do \
-        a2dismod "$module" || true; \
-    done \
-    && rm -f /etc/apache2/mods-enabled/mpm_*.load \
-              /etc/apache2/mods-enabled/mpm_*.conf \
+# Configure Apache MPM
+RUN find /etc/apache2/mods-enabled -maxdepth 1 \
+    \( -name 'mpm_*.load' -o -name 'mpm_*.conf' \) \
+    -delete \
     && a2enmod mpm_prefork rewrite \
-    RUN echo "===== MPM CONFIGURATION SEARCH =====" \
-    && grep -RniE '^[[:space:]]*LoadModule[[:space:]]+mpm_' /etc/apache2 || true \
-    && echo "===== ENABLED MPM FILES =====" \
-    && ls -la /etc/apache2/mods-enabled/mpm_* 2>/dev/null || true
+    && echo "=== ACTIVE MPM MODULES ===" \
+    && grep -RniE '^[[:space:]]*LoadModule[[:space:]]+mpm_' /etc/apache2 \
     && apache2ctl configtest
 
 # Install Composer
