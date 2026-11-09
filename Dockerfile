@@ -40,10 +40,15 @@ RUN rm -rf /var/lib/apt/lists/* \
         zip \
         gd \
         opcache \
-    && a2dismod mpm_event || true
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-    RUN a2dismod mpm_worker || true \
-    && a2enmod mpm_prefork rewrite
+# Fix Apache MPM configuration
+RUN rm -f /etc/apache2/mods-enabled/mpm_event.* \
+          /etc/apache2/mods-enabled/mpm_worker.* \
+    && a2enmod mpm_prefork rewrite \
+    && ls -l /etc/apache2/mods-enabled/mpm*
+
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
