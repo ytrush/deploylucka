@@ -19,6 +19,7 @@ FROM php:8.3-apache-bookworm
 
 WORKDIR /var/www/html
 
+
 # Install PHP extensions and system dependencies
 RUN rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
@@ -39,9 +40,10 @@ RUN rm -rf /var/lib/apt/lists/* \
         zip \
         gd \
         opcache \
-    && a2enmod rewrite \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && a2dismod mpm_event || true
+
+    RUN a2dismod mpm_worker || true \
+    && a2enmod mpm_prefork rewrite
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
