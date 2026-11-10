@@ -89,7 +89,7 @@ Route::get('/dashboard', function () {
 
     if ($recommendedCourses->isEmpty()) {
         $recommendedCourses = Course::query()
-            ->with(['instructor:id,name,photo_path', 'category:id,name'])
+            ->with(['instructor:id,name', 'category:id,name'])
             ->whereNotIn('id', $enrolledCourseIds)
             ->orderByDesc('id')
             ->take(3)
