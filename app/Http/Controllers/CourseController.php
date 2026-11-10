@@ -24,7 +24,7 @@ class CourseController extends Controller
         $user = Auth::user();
 
         $courses = Course::query()
-            ->with(['instructor:id,name,email,photo_path', 'category:id,name', 'materis'])
+            ->with(['instructor:id,name,email', 'category:id,name', 'materis'])
             ->when($selectedCategoryId > 0, function ($query) use ($selectedCategoryId) {
                 $query->where('category_id', $selectedCategoryId);
             })
@@ -70,7 +70,7 @@ class CourseController extends Controller
         $preferredCategoryIds = $user ? $user->enrolledCourses()->pluck('category_id')->filter()->unique()->toArray() : [];
 
         $recommendedCourses = Course::query()
-            ->with(['instructor:id,name,email,photo_path', 'category:id,name', 'materis'])
+            ->with(['instructor:id,name,email', 'category:id,name', 'materis'])
             ->when(! empty($preferredCategoryIds), function ($query) use ($preferredCategoryIds) {
                 $query->whereIn('category_id', $preferredCategoryIds);
             })
@@ -81,7 +81,7 @@ class CourseController extends Controller
 
         if ($recommendedCourses->isEmpty()) {
             $recommendedCourses = Course::query()
-                ->with(['instructor:id,name,email,photo_path', 'category:id,name', 'materis'])
+                ->with(['instructor:id,name,email', 'category:id,name', 'materis'])
                 ->whereNotIn('id', $enrolledCourseIds)
                 ->orderByDesc('id')
                 ->take(3)
@@ -166,7 +166,7 @@ class CourseController extends Controller
         }
 
         $course->load([
-            'instructor:id,name,email,photo_path',
+            'instructor:id,name,email',
             'category:id,name',
             'materis',
             'sections',
@@ -196,7 +196,7 @@ class CourseController extends Controller
         }
 
         $course->load([
-            'instructor:id,name,email,photo_path',
+            'instructor:id,name,email',
             'category:id,name',
             'materis',
             'sections',
@@ -287,7 +287,7 @@ class CourseController extends Controller
     {
         $instructors = Instructor::query()
             ->orderBy('name')
-            ->get(['id', 'name', 'photo_path']);
+            ->get(['id', 'name']);
 
         $categories = Category::query()->orderBy('name')->get(['id', 'name']);
 
@@ -311,7 +311,7 @@ class CourseController extends Controller
     {
         $instructors = Instructor::query()
             ->orderBy('name')
-            ->get(['id', 'name', 'photo_path']);
+            ->get(['id', 'name']);
 
         $categories = Category::query()->orderBy('name')->get(['id', 'name']);
 
