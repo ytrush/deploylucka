@@ -1,2 +1,6 @@
 *
 !.gitignore
+!articles/
+!categories/
+!courses/
+!instructors/
