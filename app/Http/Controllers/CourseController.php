@@ -127,7 +127,7 @@ class CourseController extends Controller
     public function show(Course $course): View|\Illuminate\Http\RedirectResponse
     {
         $course->load([
-            'instructor:id,name,email,photo_path',
+            'instructor:id,name,email',
             'category:id,name',
             'materis',
             'comments.user',
