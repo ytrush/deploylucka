@@ -78,7 +78,7 @@ Route::get('/dashboard', function () {
     $enrolledCourseIds = $enrolledCourses->pluck('id')->all();
     $preferredCategoryIds = $enrolledCourses->pluck('category_id')->filter()->unique()->all();
     $recommendedCourses = Course::query()
-        ->with(['instructor:id,name,photo_path', 'category:id,name'])
+        ->with(['instructor:id,name', 'category:id,name'])
         ->when(! empty($preferredCategoryIds), function ($query) use ($preferredCategoryIds) {
             $query->whereIn('category_id', $preferredCategoryIds);
         })
@@ -178,7 +178,7 @@ Route::middleware(['auth', 'admin.filament'])->group(function () {
 
         $preferredCategoryIds = $enrolledCourses->pluck('category_id')->filter()->unique()->all();
         $recommendedCourses = Course::query()
-            ->with(['instructor:id,name,photo_path', 'category:id,name'])
+            ->with(['instructor:id,name', 'category:id,name'])
             ->when(! empty($preferredCategoryIds), function ($query) use ($preferredCategoryIds) {
                 $query->whereIn('category_id', $preferredCategoryIds);
             })
@@ -189,7 +189,7 @@ Route::middleware(['auth', 'admin.filament'])->group(function () {
 
         if ($recommendedCourses->isEmpty()) {
             $recommendedCourses = Course::query()
-                ->with(['instructor:id,name,photo_path', 'category:id,name'])
+                ->with(['instructor:id,name', 'category:id,name'])
                 ->whereNotIn('id', $enrolledCourseIds)
                 ->orderByDesc('id')
                 ->take(4)
