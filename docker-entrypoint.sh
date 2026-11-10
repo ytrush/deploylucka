@@ -23,7 +23,7 @@ ls -la storage/app/public
 
 # Configure Railway port
 sed -i "s|^Listen .*|Listen ${PORT}|" /etc/apache2/ports.conf
-sed -i "s|<VirtualHost \*:80>|<VirtualHost *:${PORT}|" /etc/apache2/sites-available/000-default.conf
+sed -i "s|<VirtualHost \*:80>|<VirtualHost *:${PORT}>|" /etc/apache2/sites-available/000-default.conf
 
 echo "=== ACTIVE MPM MODULES ==="
 ls -l /etc/apache2/mods-enabled/mpm_*
